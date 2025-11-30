@@ -1,19 +1,23 @@
 {
     "name": "helpdesk-ai-backend",
     "version": "0.1.0",
+    "description": "Backend del sistema HelpDesk AI",
     "main": "src/index.js",
     "scripts": {
-        "start": "node src/index.js",
         "dev": "nodemon src/index.js",
-        "test": "echo \"no tests yet\" && exit 0"
+        "start": "node src/index.js"
     },
     "dependencies": {
-        "express": "^4.18.2",
+        "@prisma/client": "^7.0.1",
+        "axios": "^1.13.2",
+        "bcrypt": "^6.0.0",
         "cors": "^2.8.5",
-        "pg": "^8.8.0",
-        "dotenv": "^16.0.0"
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "jsonwebtoken": "^9.0.2"
     },
     "devDependencies": {
-        "nodemon": "^2.0.20"
+        "nodemon": "^3.1.0",
+        "prisma": "^7.0.1"
     }
 }
