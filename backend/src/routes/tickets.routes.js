@@ -37,3 +37,16 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: 'Error al crear ticket' });
     }
 });
+
+// LISTAR TICKETS (opcional, útil para pruebas)
+router.get('/', async (req, res) => {
+    try {
+        const tickets = await prisma.ticket.findMany({ include: { user: true } });
+        res.json(tickets);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error al obtener tickets' });
+    }
+});
+
+module.exports = router;

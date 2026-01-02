@@ -1,92 +1,123 @@
-# Helpdesk-AI
+# HelpDesk AI
 
-Plataforma de Gestión de Incidencias con IA
+Sistema de HelpDesk inteligente que clasifica tickets automáticamente utilizando un servicio de inteligencia artificial. El proyecto consta de tres componentes principales integrados para ofrecer una experiencia completa de gestión de incidencias.
 
-Este proyecto es una plataforma full-stack para la gestión de incidencias (tickets) que integra un microservicio de Inteligencia Artificial para clasificar automáticamente los reportes según su descripción. Está diseñada con una arquitectura modular y escalable para uso profesional.
+## Estructura del Proyecto
 
----
+El sistema se divide en tres carpetas principales, cada una correspondiendo a un microservicio o capa de la aplicación:
 
-## 🚀 Tecnologías principales
+- **frontend/**: Aplicación de interfaz de usuario construida con React, Vite y TailwindCSS.
+- **backend/**: Servidor API RESTful construido con Node.js, Express y Prisma ORM.
+- **ai-service/**: Microservicio de clasificación de texto construido con Python y FastAPI.
+- **database/**: Archivos relacionados con la base de datos (migraciones, esquemas).
 
-### Frontend
-- React (Vite)
-- Axios
-- TailwindCSS o Material UI
+## Requisitos Previos
 
-### Backend
-- Node.js + Express
-- PostgreSQL
-- JWT para autenticación
-- Sequelize o Prisma (según implementación)
+Antes de comenzar, asegúrate de tener instalado el siguiente software en tu entorno:
 
-### Servicio de IA
-- Python
-- FastAPI
-- scikit-learn / spaCy / transformers (dependiendo del modelo)
-
-### Infraestructura y herramientas
-- Docker (opcional para despliegue)
-- GitHub Projects (Kanban)
-- GitHub Actions (CI/CD)
-- ESLint / Prettier
+- **Node.js** (v18 o superior)
+- **Python** (v3.9 o superior)
+- **PostgreSQL** (Motor de base de datos)
 
 ---
 
-## 🧱 Arquitectura
+## Guía de Instalación y Ejecución
 
-Frontend (React)
-↓
-Backend REST (Node.js / Express)
-↓
-PostgreSQL (DB)
-↓
-AI Microservice (FastAPI + Python)
+Para ejecutar el sistema completo, deberás configurar e iniciar cada componente en una terminal separada.
 
-## 📁 Estructura del proyecto
+### 1. Base de Datos y Backend
 
-helpdesk-ai/
-│
-├── backend/ # API REST con Node.js
-├── frontend/ # Interfaz web con React
-├── ai-service/ # Microservicio de IA con FastAPI
-├── docs/ # Arquitectura, especificaciones y documentación
-├── database/ # Esquemas y migraciones SQL
-├── LICENSE # MIT
-└── README.md
+El backend gestiona la lógica de negocio y la conexión con la base de datos PostgreSQL.
 
-## 📌 Estado del proyecto
+1.  **Navegar al directorio del backend:**
+    ```bash
+    cd backend
+    ```
 
-- [x] Estructura base del repositorio
-- [x] Backend mínimo con Express
-- [x] Microservicio IA base con FastAPI
-- [x] Documentación inicial en `docs/`
-- [ ] Integración API → AI
-- [ ] Modelos de BD y migraciones
-- [ ] Login y JWT
-- [ ] CRUD de tickets
-- [ ] UI en React
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
 
-## 🛠️ Instalación y ejecución rápida (local)
+3.  **Configurar variables de entorno:**
+    Crea un archivo `.env` en la carpeta `backend` y añade lo siguiente (ajusta `DATABASE_URL` con tus credenciales de PostgreSQL):
+    ```env
+    PORT=3000
+    DATABASE_URL="postgresql://usuario:password@localhost:5432/helpdesk_ai?schema=public"
+    JWT_SECRET="clave_secreta_para_tokens"
+    AI_SERVICE_URL="http://localhost:8000/predict"
+    ```
 
-### Backend
-```bash
-cd backend
-npm install
-npm run dev
+4.  **Ejecutar migraciones de base de datos:**
+    Esto creará las tablas necesarias en tu base de datos PostgreSQL.
+    ```bash
+    npx prisma migrate dev --name init
+    ```
 
-Visita: http://localhost:3000
-```
-### AI Service
-```bash
-cd ai-service
-# (recomendado: crear y activar un venv)
-python -m venv venv
-# Windows CMD:
-venv\Scripts\activate.bat
-# PowerShell:
-.\venv\Scripts\Activate.ps1
-pip install fastapi uvicorn pydantic
-uvicorn main:app --reload --port 8000
+5.  **Iniciar el servidor backend:**
+    ```bash
+    npm run dev
+    ```
+    > El backend estará corriendo en: `http://localhost:3000`
 
-Visita: http://localhost:8000 y http://localhost:8000/docs
-```
+### 2. Servicio de Inteligencia Artificial (AI Service)
+
+Este servicio recibe descripciones de tickets y determina su categoría automáticamente.
+
+1.  **Navegar al directorio del servicio de AI:**
+    (Abre una nueva terminal)
+    ```bash
+    cd ai-service
+    ```
+
+2.  **Crear entorno virtual (Recomendado):**
+    ```bash
+    # Windows
+    python -m venv venv
+    .\venv\Scripts\activate
+    
+    # macOS/Linux
+    source venv/bin/activate
+    ```
+
+3.  **Instalar dependencias:**
+    ```bash
+    pip install fastapi uvicorn
+    ```
+
+4.  **Iniciar el servicio:**
+    ```bash
+    uvicorn main:app --reload --port 8000
+    ```
+    > El servicio de IA estará corriendo en: `http://localhost:8000`
+
+### 3. Frontend
+
+La interfaz visual para que los usuarios creen y vean sus tickets.
+
+1.  **Navegar al directorio del frontend:**
+    (Abre una nueva terminal)
+    ```bash
+    cd frontend
+    ```
+
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
+
+3.  **Iniciar la aplicación:**
+    ```bash
+    npm run dev
+    ```
+    > El frontend generalmente correrá en: `http://localhost:5173` (verifique la consola para el puerto exacto).
+
+---
+
+## Flujo de Uso
+
+1.  Abre el navegador en la URL proporcionada por el Frontend (ej. `http://localhost:5173`).
+2.  Regístrate o inicia sesión en la aplicación.
+3.  Crea un nuevo ticket describiendo un problema (ej. "La impresora no responde" o "El internet está muy lento").
+4.  El sistema enviará la descripción al **AI Service**, clasificará el ticket (ej. "Hardware" o "Red") y lo guardará en la base de datos.
+5.  Podrás ver el ticket creado con su categoría asignada en el tablero principal.
